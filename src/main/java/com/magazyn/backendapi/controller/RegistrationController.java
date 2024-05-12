@@ -6,6 +6,7 @@ import com.magazyn.backendapi.service.DriverService;
 import com.magazyn.backendapi.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,25 +31,25 @@ public class RegistrationController {
         this.customerService = customerService;
         this.driverService = driverService;
     }
-
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/driver")
     public ResponseEntity<?> registerDriver(@Validated @RequestBody UserRegistrationDTO userRegistrationDTO) {
-        if (!userService.checkExistEmailForAllUsers(userRegistrationDTO.getEmail())) {
+        if (userService.checkExistEmailForAllUsers(userRegistrationDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(EMAIL_ALERT);
         }
-        if (!userService.checkExistUsernameForAllUsers(userRegistrationDTO.getUsername())) {
+        if (userService.checkExistUsernameForAllUsers(userRegistrationDTO.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(USERNAME_ALERT);
         }
         driverService.saveDriver(driverService.compereToDriver(userRegistrationDTO));
         return ResponseEntity.ok(CONFIRM_SAVE_USER);
     }
-
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/customer")
     public ResponseEntity<?> registerCustomer(@Validated @RequestBody UserRegistrationDTO userRegistrationDTO) {
-        if (!userService.checkExistEmailForAllUsers(userRegistrationDTO.getEmail())) {
+        if (userService.checkExistEmailForAllUsers(userRegistrationDTO.getEmail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(EMAIL_ALERT);
         }
-        if (!userService.checkExistUsernameForAllUsers(userRegistrationDTO.getUsername())) {
+        if (userService.checkExistUsernameForAllUsers(userRegistrationDTO.getUsername())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(USERNAME_ALERT);
         }
         customerService.saveCustomer(customerService.compereToCustomer(userRegistrationDTO));

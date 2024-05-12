@@ -1,13 +1,12 @@
 package com.magazyn.backendapi.service;
 
-
 import com.magazyn.backendapi.repository.AdminRepository;
 import com.magazyn.backendapi.repository.CustomerRepository;
 import com.magazyn.backendapi.repository.DriverRepository;
 import com.magazyn.backendapi.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -26,19 +25,19 @@ public class UserService {
 
     public boolean checkExistEmailForAllUsers(String email) {
         return Stream.of(
-                adminRepository.findByEmail(email),
-                driverRepository.findByEmail(email),
-                customerRepository.findByEmail(email),
-                employeeRepository.findByEmail(email))
-                .anyMatch(Objects::isNull);
+                        adminRepository.findByEmail(email),
+                        driverRepository.findByEmail(email),
+                        customerRepository.findByEmail(email),
+                        employeeRepository.findByEmail(email))
+                .anyMatch(Optional::isPresent);
     }
 
     public boolean checkExistUsernameForAllUsers(String username) {
         return Stream.of(
-                adminRepository.findByUsername(username),
-                customerRepository.findByUsername(username),
-                driverRepository.findByUsername(username),
-                employeeRepository.findByUsername(username))
-                .allMatch(Objects::isNull);
+                        adminRepository.findByUsername(username),
+                        customerRepository.findByUsername(username),
+                        driverRepository.findByUsername(username),
+                        employeeRepository.findByUsername(username))
+                .anyMatch(Optional::isPresent);
     }
 }
