@@ -23,6 +23,8 @@ public class DriverService {
         driver.setName(registration.getName());
         driver.setEmail(registration.getEmail());
         driver.setPassword(registration.getPassword());
+        driver.setSurname(registration.getSurname());
+        driver.setUsername(registration.getUsername());
 
         Driver encryptedDriver = userPasswordEncryptor.encryptPasswordInBaseUser(driver);
         if (encryptedDriver == null) {

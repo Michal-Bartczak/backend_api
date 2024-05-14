@@ -7,14 +7,19 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 @Service
 public class OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
     private final OrderRepository orderRepository;
+    private final SecurityService securityService;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, SecurityService securityService) {
         this.orderRepository = orderRepository;
+        this.securityService = securityService;
     }
+
 
     public Order getOrderByTrackingNumber(String trackingNumber) {
         logger.info("Tracking Number: {}", trackingNumber);
@@ -29,4 +34,12 @@ public class OrderService {
         }
         return new OrderStatusDTO(order.getStatus(), order.getTrackingNumber());
     }
+
+
+    public List<Order> getAllOrdersByCustomerIdSortedByDate() {
+        String username = securityService.getAuthenticatedUsername();
+
+        return orderRepository.findAllByCustomerIdOrderByCreationDate(securityService.getIdByUsername(username));
+    }
+
 }

@@ -76,7 +76,11 @@ public class JwtServiceImp implements JwtService {
     }
 
     private SecretKey getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(environment.getProperty("JWT_SECRET"));
+        String secret = environment.getProperty("JWT_SECRET");
+        if (secret == null || secret.isEmpty()) {
+            throw new IllegalArgumentException("JWT_SECRET property is not set in the environment");
+        }
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
