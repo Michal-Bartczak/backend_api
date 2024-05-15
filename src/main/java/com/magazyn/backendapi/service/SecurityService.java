@@ -5,14 +5,17 @@ import com.magazyn.backendapi.repository.CustomerRepository;
 import com.magazyn.backendapi.repository.DriverRepository;
 import com.magazyn.backendapi.repository.EmployeeRepository;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class SecurityService {
@@ -53,6 +56,16 @@ public class SecurityService {
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
+    }
+    public Collection<String> getUserRoles(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            return authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .map(role -> role.substring(5))
+                    .collect(Collectors.toList());
+        }
+        return null;
     }
 
 }

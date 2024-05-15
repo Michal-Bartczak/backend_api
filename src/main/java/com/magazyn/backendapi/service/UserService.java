@@ -1,5 +1,6 @@
 package com.magazyn.backendapi.service;
 
+import com.magazyn.backendapi.dto.UserDetailsDTO;
 import com.magazyn.backendapi.repository.AdminRepository;
 import com.magazyn.backendapi.repository.CustomerRepository;
 import com.magazyn.backendapi.repository.DriverRepository;
@@ -15,12 +16,14 @@ public class UserService {
     private final EmployeeRepository employeeRepository;
     private final DriverRepository driverRepository;
     private final AdminRepository adminRepository;
+    private final SecurityService securityService;
 
-    public UserService(CustomerRepository customerRepository, EmployeeRepository employeeRepository, DriverRepository driverRepository, AdminRepository adminRepository) {
+    public UserService(CustomerRepository customerRepository, EmployeeRepository employeeRepository, DriverRepository driverRepository, AdminRepository adminRepository, SecurityService securityService) {
         this.customerRepository = customerRepository;
         this.employeeRepository = employeeRepository;
         this.driverRepository = driverRepository;
         this.adminRepository = adminRepository;
+        this.securityService = securityService;
     }
 
     public boolean checkExistEmailForAllUsers(String email) {
@@ -39,6 +42,9 @@ public class UserService {
                         driverRepository.findByUsername(username),
                         employeeRepository.findByUsername(username))
                 .anyMatch(Optional::isPresent);
+    }
+    public UserDetailsDTO getCurrentUserUsernameAndRoles() {
+        return new UserDetailsDTO(securityService.getAuthenticatedUsername(), securityService.getUserRoles());
     }
 
 
