@@ -6,6 +6,8 @@ import com.magazyn.backendapi.generics.UserPasswordEncryptor;
 import com.magazyn.backendapi.repository.DriverRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DriverService {
 
@@ -35,5 +37,9 @@ public class DriverService {
 
     public void saveDriver(Driver driver) {
         driverRepository.save(driver);
+    }
+
+    public List<Driver> getAllDrivers(){
+        return driverRepository.findAll();
     }
 }
